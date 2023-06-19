@@ -47,7 +47,7 @@
 ### Eksekusi
 Pertama Salin Kode Dibawah dan Tempel di Vps Kalian.. Tunggu Hingga Proses Selesai
 ````bash
-git clone https://github.com/nekolocal/nekomenfess && cd nekomenfess
+git clone https://github.com/kaitod-id/FWBBASEMANFESS && cd FWBBASEMANFESS
 ````
 Jika Sudah Selesai,Salin Kode Dibawah dan Tempel di Vps
 
