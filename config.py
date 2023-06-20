@@ -9,8 +9,8 @@ db_url = os.environ.get("DB_URL", "mongodb+srv://neko:<password>@nekomenfess.ss5
 db_name = os.environ.get("DB_NAME", "menfess")
 # =========================================================== #
 
-channel_1 = int(os.environ.get("CHANNEL_1", "-1001884106616"))
-channel_2 = int(os.environ.get("CHANNEL_2", "-1001973439933"))
+channel_1 = int(os.environ.get("CHANNEL_1", "-1001830268921"))
+channel_2 = int(os.environ.get("CHANNEL_2", "-1001931357331"))
 channel_log = int(os.environ.get("CHANNEL_LOG", "-1001941178911"))
 # =========================================================== #
 
