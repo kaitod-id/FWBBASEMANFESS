@@ -56,6 +56,10 @@ class Helper():
             member = await self.bot.get_chat_member(config.channel_2, user_id)
         except UserNotParticipant:
             return False
+            try:
+            member = await self.bot.get_chat_member(config.channel_3, user_id)
+        except UserNotParticipant:
+            return False
 
         status = [
             enums.ChatMemberStatus.OWNER,
