@@ -3,11 +3,11 @@ import config
 import pytz
 import pyrogram
 from pyrogram.errors import UserNotParticipant
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, Update
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram import enums, Client
 from datetime import datetime
-from ..database import Database
-from .waktu import Waktu
+from database import Database
+from waktu import Waktu
 
 
 class Helper():
@@ -53,14 +53,13 @@ class Helper():
         except UserNotParticipant:
             return False
         try:
-    member = await self.bot.get_chat_member(config.channel_2, user_id)
-except UserNotParticipant:
-    return False
-try:
-    member = await self.bot.get_chat_member(config.channel_3, user_id)
-except UserNotParticipant:
-    return False
-
+            member = await self.bot.get_chat_member(config.channel_2, user_id)
+        except UserNotParticipant:
+            return False
+        try:
+            member = await self.bot.get_chat_member(config.channel_3, user_id)
+        except UserNotParticipant:
+            return False
 
         status = [
             enums.ChatMemberStatus.OWNER,
