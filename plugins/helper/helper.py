@@ -72,26 +72,22 @@ class Helper():
         ]
         return member.status in status
 
-async def pesan_langganan(self):
-    link_1 = await self.bot.export_chat_invite_link(config.channel_1)
-    link_2 = await self.bot.export_chat_invite_link(config.channel_2)
-    link_3 = await self.bot.export_chat_invite_link(config.channel_3)
-    link_4 = await self.bot.export_chat_invite_link(config.channel_4)
+    async def pesan_langganan(self):
+        link_1 = await self.bot.export_chat_invite_link(config.channel_1)
+        link_2 = await self.bot.export_chat_invite_link(config.channel_2)
+        link_3 = await self.bot.export_chat_invite_link(config.channel_3)
+        link_4 = await self.bot.export_chat_invite_link(config.channel_4)  # Tambahkan link channel 4
+        markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
+            [InlineKeyboardButton('Channel Support', url=link_3)],
+            [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
+        ])
 
-    markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
-        [InlineKeyboardButton('Channel Support', url=link_3)]
-    ])
+        # Periksa apakah user belum bergabung dengan channel 4
+        if not await self.cek_langganan_channel(self.user_id):
+            markup.row(InlineKeyboardButton('Channel 4', url=link_4))  # Tambahkan tombol untuk join ke channel 4
 
-    if not await self.cek_langganan_channel(self.user_id):
         await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
-    else:
-        markup.row(InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start'))
-        if config.channel_4 not in [config.channel_1, config.channel_2, config.channel_3]:
-            await self.bot.send_message(self.user_id, config.start_msg2, reply_to_message_id=self.message.id, reply_markup=markup)
-        else:
-            await self.bot.send_message(self.user_id, config.start_msg, reply_to_message_id=self.message.id, reply_markup=markup)
-
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
@@ -102,7 +98,7 @@ async def pesan_langganan(self):
         coin = f"0_{str(self.user_id)}"
         if self.user_id == config.id_admin:
             status = 'owner'
-            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
+            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
 
         nama = await self.escapeHTML(nama)
         data = {
@@ -144,53 +140,9 @@ async def pesan_langganan(self):
             return y
         if len(y) <= 3:
             return y
-        else:
-            p = y[-3:]
-            q = y[:-3]
-            return self.formatrupiah(q) + "." + p
-
-    def formatduration(self, durasi):
-        q, r = divmod(durasi, 60)
-        h, q = divmod(q, 60)
-        d, h = divmod(h, 24)
-
-        duration = ""
-        if d > 0:
-            duration += f"{d} Hari "
-        if h > 0:
-            duration += f"{h} Jam "
-        if q > 0:
-            duration += f"{q} Menit "
-        if r > 0:
-            duration += f"{r} Detik"
-
-        return duration
-
-    async def info_pelanggan(self):
-        database = Database(self.user_id)
-        pelanggan = await database.get_pelanggan(self.user_id)
-
-        if pelanggan:
-            nama = pelanggan['nama']
-            status = pelanggan['status'].split("_")[0]
-            waktu_daftar = pelanggan['sign_up']
-            coin = int(pelanggan['coin'].split("_")[0])
-            menfess = pelanggan['menfess']
-            all_menfess = pelanggan['all_menfess']
-            telegram_premium = self.premium
-
-            pesan = "<b>📝 INFORMASI PELANGGAN</b>\n"
-            pesan += f"├ Nama : {await self.escapeHTML(nama)}\n"
-            pesan += f"├ Status : {status.capitalize()}\n"
-            pesan += f"├ Telegram Premium : {'✅' if telegram_premium else '❌'}\n"
-            pesan += f"├ Daftar pada : {waktu_daftar}\n"
-            pesan += f"├ Coin : {self.formatrupiah(coin)}\n"
-            pesan += f"├ Menfess saat ini : {menfess}\n"
-            pesan += f"└ Total Menfess : {all_menfess}"
-        else:
-            pesan = "Anda belum terdaftar sebagai pelanggan."
-
-        await self.bot.send_message(self.user_id, pesan, enums.ParseMode.HTML)
+        p = y[-3:]
+        q = y[:-3]
+        return f'{self.formatrupiah(q)}.{p}'
 
     def get_time(self):
         hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"]
