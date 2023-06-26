@@ -72,13 +72,12 @@ class Helper():
         link_1 = await self.bot.export_chat_invite_link(config.channel_1)
         link_2 = await self.bot.export_chat_invite_link(config.channel_2)
         link_3 = await self.bot.export_chat_invite_link(config.channel_3)
-        link_4 = f'https://t.me/{config.channel_4}'
-
-        if await self.cek_langganan_channel(self.user_id):
-            await self.bot.send_message(self.user_id, config.start_msg2)
-        else:
-            pesan = config.pesan_join + f"\n\nLink Channel 4: {link_4}"
-            await self.bot.send_message(self.user_id, pesan, reply_to_message_id=self.message.id)
+        markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
+            [InlineKeyboardButton('Channel Support', url=link_3)],
+            [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
+        ])
+        await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
@@ -89,7 +88,7 @@ class Helper():
         coin = f"0_{str(self.user_id)}"
         if self.user_id == config.id_admin:
             status = 'owner'
-            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
+            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
 
         nama = await self.escapeHTML(nama)
         data = {
@@ -162,26 +161,3 @@ class Helper():
             'jam': waktu[4],
             'full': full_time
         })
-    
-    async def invite_to_channel(self, channel_id):
-        invite_link = await self.bot.export_chat_invite_link(channel_id)
-        return invite_link
-
-    async def pesan_langganan(self):
-        link_1 = await self.invite_to_channel(config.channel_1)
-        link_2 = await self.invite_to_channel(config.channel_2)
-        link_3 = await self.invite_to_channel(config.channel_3)
-        link_4 = await self.invite_to_channel(config.channel_4)
-
-        if await self.cek_langganan_channel(self.user_id):
-            await self.bot.send_message(self.user_id, config.start_msg2)
-        else:
-            markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
-                [InlineKeyboardButton('Channel Support', url=link_3)],
-                [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
-            ])
-            await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
-
-helper = Helper(bot, message)
-await helper.pesan_langganan()
