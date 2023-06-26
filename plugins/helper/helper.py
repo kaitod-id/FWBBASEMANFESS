@@ -72,22 +72,26 @@ class Helper():
         ]
         return member.status in status
 
-    async def pesan_langganan(self):
-        link_1 = await self.bot.export_chat_invite_link(config.channel_1)
-        link_2 = await self.bot.export_chat_invite_link(config.channel_2)
-        link_3 = await self.bot.export_chat_invite_link(config.channel_3)
-        link_4 = await self.bot.export_chat_invite_link(config.channel_4)
-        
-        markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
-            [InlineKeyboardButton('Channel Support', url=link_3)]
-        ])
-        
-        if not await self.cek_langganan_channel(self.user_id):
-            await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
+async def pesan_langganan(self):
+    link_1 = await self.bot.export_chat_invite_link(config.channel_1)
+    link_2 = await self.bot.export_chat_invite_link(config.channel_2)
+    link_3 = await self.bot.export_chat_invite_link(config.channel_3)
+    link_4 = await self.bot.export_chat_invite_link(config.channel_4)
+
+    markup = InlineKeyboardMarkup([
+        [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
+        [InlineKeyboardButton('Channel Support', url=link_3)]
+    ])
+
+    if not await self.cek_langganan_channel(self.user_id):
+        await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
+    else:
+        markup.row(InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start'))
+        if config.channel_4 not in [config.channel_1, config.channel_2, config.channel_3]:
+            await self.bot.send_message(self.user_id, config.start_msg2, reply_to_message_id=self.message.id, reply_markup=markup)
         else:
-            markup.row(InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start'))
             await self.bot.send_message(self.user_id, config.start_msg, reply_to_message_id=self.message.id, reply_markup=markup)
+
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
