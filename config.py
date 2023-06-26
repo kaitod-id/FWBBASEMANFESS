@@ -12,6 +12,7 @@ db_name = os.environ.get("DB_NAME", "menfess")
 channel_1 = int(os.environ.get("CHANNEL_1", "-1001830268921"))
 channel_2 = int(os.environ.get("CHANNEL_2", "-1001931357331"))
 channel_3 = int(os.environ.get("CHANNEL_3", "-1001884106616"))
+channel_4 = int(os.environ.get("CHANNEL_4", "-100"))
 channel_log = int(os.environ.get("CHANNEL_LOG", "-1001954399667"))
 # =========================================================== #
 
@@ -67,6 +68,9 @@ start_msg = os.environ.get("START_MSG", """"
 #FwbFind untuk Mencari Pasangan, Teman, Partner dll
 
 {fullname} 🌱\n\nIni adalah bot menfess, semua pesan yang kamu kirim akan masuk ke channel secara anonymous. ketik /help""")
+
+start_msg2 = os.environ.get("START_MSG2", """"
+{mention} Silahkan join ke @NekoMenfess dan klik /start""")
 
 gagalkirim_msg = os.environ.get("GAGAL_KIRIM", """
 {mention}, pesan mu gagal terkirim silahkan gunakan hastag:
