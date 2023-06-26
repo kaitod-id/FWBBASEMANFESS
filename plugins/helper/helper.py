@@ -77,7 +77,14 @@ class Helper():
             [InlineKeyboardButton('Channel Support', url=link_3)],
             [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
         ])
-        await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
+
+        # Pesan khusus jika belum bergabung ke config.channel_4
+        try:
+            member = await self.bot.get_chat_member(config.channel_4, self.user_id)
+            if member.status not in [enums.ChatMemberStatus.OWNER, enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.MEMBER]:
+                await self.bot.send_message(self.user_id, config.start_msg2, reply_markup=markup)
+        except UserNotParticipant:
+            await self.bot.send_message(self.user_id, config.start_msg2, reply_markup=markup)
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
