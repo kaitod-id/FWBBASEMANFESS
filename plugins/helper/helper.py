@@ -85,7 +85,7 @@ class Helper():
 
         # Periksa apakah user belum bergabung dengan channel 4
         if not await self.cek_langganan_channel(self.user_id):
-            markup.row(InlineKeyboardButton('Channel 4', url=link_4))  # Tambahkan tombol untuk join ke channel 4
+            markup = (InlineKeyboardButton('Channel 4', url=link_4))  # Tambahkan tombol untuk join ke channel 4
 
         await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
 
