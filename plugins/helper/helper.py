@@ -79,9 +79,9 @@ class Helper():
         
         if not is_joined:
             markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton('Join Channel 4', url=link_4)]
+                [InlineKeyboardButton('Join NekoMenfess', url=link_4)]
             ])
-            await self.bot.send_message(self.user_id, 'Anda belum bergabung dengan Channel 4. Silakan join Channel 4 untuk melanjutkan.', reply_markup=markup)
+            await self.bot.send_message(self.user_id, 'Join ke NekoMenfess agar bisa menggunakan bot. Kalo Udah Join NekoMenfess Klik /start.', reply_markup=markup)
         else:
             markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton('Channel Base', url=link_1), InlineKeyboardButton('Group Base', url=link_2)],
