@@ -76,7 +76,7 @@ class Helper():
         link_1 = await self.bot.export_chat_invite_link(config.channel_1)
         link_2 = await self.bot.export_chat_invite_link(config.channel_2)
         link_3 = await self.bot.export_chat_invite_link(config.channel_3)
-        link_4 = await self.bot.export_chat_invite_link{config.channel_4)"
+        link_4 = await self.bot.export_chat_invite_link{config.channel_4)
 
         if await self.cek_langganan_channel(self.user_id):
             await self.bot.send_message(self.user_id, config.start_msg2)
