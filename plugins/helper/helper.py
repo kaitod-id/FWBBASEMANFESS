@@ -49,24 +49,25 @@ class Helper():
         if user_id == config.id_admin:
             return True
         try:
-            member = await self.bot.get_chat_member(config.channel_1, user_id)
+            member_1 = await self.bot.get_chat_member(config.channel_1, user_id)
+            member_2 = await self.bot.get_chat_member(config.channel_2, user_id)
+            member_3 = await self.bot.get_chat_member(config.channel_3, user_id)
+            member_4 = await self.bot.get_chat_member(config.channel_4, user_id)
         except UserNotParticipant:
             return False
-        try:
-            member = await self.bot.get_chat_member(config.channel_2, user_id)
-        except UserNotParticipant:
-            return False
-        try:
-            member = await self.bot.get_chat_member(config.channel_3, user_id)
-        except UserNotParticipant:
-            return False
-
+        
         status = [
             enums.ChatMemberStatus.OWNER,
             enums.ChatMemberStatus.MEMBER,
             enums.ChatMemberStatus.ADMINISTRATOR
         ]
-        return member.status in status
+        
+        return (
+            member_1.status in status and
+            member_2.status in status and
+            member_3.status in status and
+            member_4.status in status
+        )
 
     async def pesan_langganan(self):
         link_1 = await self.bot.export_chat_invite_link(config.channel_1)
@@ -74,10 +75,9 @@ class Helper():
         link_3 = await self.bot.export_chat_invite_link(config.channel_3)
         link_4 = await self.bot.export_chat_invite_link(config.channel_4)
         
-        is_joined_1 = await self.cek_langganan_channel(self.user_id)
-        is_joined_4 = await self.cek_langganan_channel(self.user_id)
+        is_joined = await self.cek_langganan_channel(self.user_id)
         
-        if is_joined_1 and not is_joined_4:
+        if not is_joined:
             markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton('Join Channel 4', url=link_4)]
             ])
@@ -99,7 +99,7 @@ class Helper():
         coin = f"0_{str(self.user_id)}"
         if self.user_id == config.id_admin:
             status = 'owner'
-            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
+            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
 
         nama = await self.escapeHTML(nama)
         data = {
@@ -172,3 +172,15 @@ class Helper():
             'jam': waktu[4],
             'full': full_time
         })
+
+    async def start(self):
+        if await self.cek_langganan_channel(self.user_id):
+            await self.daftar_pelanggan()
+            await self.send_to_channel_log('log_daftar')
+            await self.pesan_langganan()
+        else:
+            await self.pesan_langganan()
+
+    async def process(self):
+        await self.start()
+
