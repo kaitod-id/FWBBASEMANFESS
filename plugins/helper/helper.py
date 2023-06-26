@@ -72,21 +72,16 @@ class Helper():
         link_1 = await self.bot.export_chat_invite_link(config.channel_1)
         link_2 = await self.bot.export_chat_invite_link(config.channel_2)
         link_3 = await self.bot.export_chat_invite_link(config.channel_3)
-        markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
-            [InlineKeyboardButton('Channel Support', url=link_3)],
-            [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
-        ])
-        
-        member_neko = await self.bot.get_chat_member(config.channel_neko, self.user_id)
-        if member_neko.status not in [
-            enums.ChatMemberStatus.OWNER,
-            enums.ChatMemberStatus.MEMBER,
-            enums.ChatMemberStatus.ADMINISTRATOR
-        ]:
-            await self.bot.send_message(self.user_id, config.start_msg2, reply_to_message_id=self.message.id)
-        
-        await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
+
+        if await self.cek_langganan_channel(self.user_id):
+            await self.bot.send_message(self.user_id, config.start_msg2)
+        else:
+            markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
+                [InlineKeyboardButton('Channel Support', url=link_3)],
+                [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
+            ])
+            await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
@@ -97,7 +92,7 @@ class Helper():
         coin = f"0_{str(self.user_id)}"
         if self.user_id == config.id_admin:
             status = 'owner'
-            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
+            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
 
         nama = await self.escapeHTML(nama)
         data = {
