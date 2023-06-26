@@ -60,6 +60,10 @@ class Helper():
             member = await self.bot.get_chat_member(config.channel_3, user_id)
         except UserNotParticipant:
             return False
+        try:
+            member = await self.bot.get_chat_member(config.channel_4, user_id)
+        except UserNotParticipant:
+            return False
 
         status = [
             enums.ChatMemberStatus.OWNER,
@@ -72,12 +76,19 @@ class Helper():
         link_1 = await self.bot.export_chat_invite_link(config.channel_1)
         link_2 = await self.bot.export_chat_invite_link(config.channel_2)
         link_3 = await self.bot.export_chat_invite_link(config.channel_3)
+        link_4 = await self.bot.export_chat_invite_link(config.channel_4)
+        
         markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('Channel base', url=link_1), InlineKeyboardButton('Group base', url=link_2)],
-            [InlineKeyboardButton('Channel Support', url=link_3)],
-            [InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start')]
+            [InlineKeyboardButton('Channel Support', url=link_3)]
         ])
-        await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
+        
+        if not await self.cek_langganan_channel(self.user_id):
+            await self.bot.send_message(self.user_id, config.start_msg2, reply_to_message_id=self.message.id, reply_markup=markup)
+            await self.bot.send_message(self.user_id, config.pesan_join_channel_4)
+        else:
+            markup.row(InlineKeyboardButton('Coba lagi', url=f'https://t.me/{self.bot.username}?start=start'))
+            await self.bot.send_message(self.user_id, config.pesan_join, reply_to_message_id=self.message.id, reply_markup=markup)
 
     async def daftar_pelanggan(self):
         database = Database(self.user_id)
@@ -130,34 +141,12 @@ class Helper():
             return y
         if len(y) <= 3:
             return y
-        p = y[-3:]
-        q = y[:-3]
-        return f'{self.formatrupiah(q)}.{p}'
+        else:
+            p = y[-3:]
+            q = y[:-3]
+            return self.formatrupiah(q) + "." + p
 
     def get_time(self):
-        hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"]
-        bulan = {
-            "01": "Januari",
-            "02": "Februari",
-            "03": "Maret",
-            "04": "April",
-            "05": "Mei",
-            "06": "Juni",
-            "07": "Juli",
-            "08": "Agustus",
-            "09": "September",
-            "10": "Oktober",
-            "11": "November",
-            "12": "Desember"
-        }
-        now = datetime.now(pytz.timezone('Asia/Jakarta'))
-        waktu = now.strftime('%w %d %m %Y %H:%M:%S').split()
-        full_time = f"{hari[int(waktu[0])]}, {waktu[1]} {bulan[waktu[2]]} {waktu[3]} {waktu[4]}"
-        return Waktu({
-            'hari': hari[int(waktu[0])],
-            'tanggal': waktu[1],
-            'bulan': bulan[waktu[2]],
-            'tahun': waktu[3],
-            'jam': waktu[4],
-            'full': full_time
-        })
+        k = datetime.now(pytz.timezone(config.timezone))
+        time = Waktu(k.year, k.month, k.day, k.hour, k.minute, k.second)
+        return time
