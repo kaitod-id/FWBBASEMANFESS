@@ -192,18 +192,30 @@ async def pesan_langganan(self):
 
         await self.bot.send_message(self.user_id, pesan, enums.ParseMode.HTML)
 
-    async def get_time(self):
-        timezone = pytz.timezone("Asia/Jakarta")
-        now = datetime.now(timezone)
-        time = Waktu(
-            now.strftime("%Y"),
-            now.strftime("%m"),
-            now.strftime("%d"),
-            now.strftime("%H"),
-            now.strftime("%M"),
-            now.strftime("%S"),
-            now.strftime("%A"),
-            now.strftime("%B"),
-            now.strftime("%Z")
-        )
-        return time
+    def get_time(self):
+        hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"]
+        bulan = {
+            "01": "Januari",
+            "02": "Februari",
+            "03": "Maret",
+            "04": "April",
+            "05": "Mei",
+            "06": "Juni",
+            "07": "Juli",
+            "08": "Agustus",
+            "09": "September",
+            "10": "Oktober",
+            "11": "November",
+            "12": "Desember"
+        }
+        now = datetime.now(pytz.timezone('Asia/Jakarta'))
+        waktu = now.strftime('%w %d %m %Y %H:%M:%S').split()
+        full_time = f"{hari[int(waktu[0])]}, {waktu[1]} {bulan[waktu[2]]} {waktu[3]} {waktu[4]}"
+        return Waktu({
+            'hari': hari[int(waktu[0])],
+            'tanggal': waktu[1],
+            'bulan': bulan[waktu[2]],
+            'tahun': waktu[3],
+            'jam': waktu[4],
+            'full': full_time
+        })
