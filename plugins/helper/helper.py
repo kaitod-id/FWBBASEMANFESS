@@ -78,10 +78,9 @@ class Helper():
         is_joined = await self.cek_langganan_channel(self.user_id)
         
         if not is_joined:
-            markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton('Join NekoMenfess', url=link_4)]
-            ])
-            await self.bot.send_message(self.user_id, 'Join ke NekoMenfess agar bisa menggunakan bot. Kalo Udah Join NekoMenfess Klik /start.', reply_markup=markup)
+            message_text = 'Join ke NekoMenfess agar bisa menggunakan bot. Kalo Udah Join NekoMenfess Klik /start.'
+            message_text = message_text.replace('NekoMenfess', f'<a href="{link_4}">NekoMenfess</a>')
+            await self.bot.send_message(self.user_id, message_text)
         else:
             markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton('Channel Base', url=link_1), InlineKeyboardButton('Group Base', url=link_2)],
@@ -99,7 +98,7 @@ class Helper():
         coin = f"0_{str(self.user_id)}"
         if self.user_id == config.id_admin:
             status = 'owner'
-            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
+            coin = f"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_{str(self.user_id)}"
 
         nama = await self.escapeHTML(nama)
         data = {
@@ -183,4 +182,3 @@ class Helper():
 
     async def process(self):
         await self.start()
-
