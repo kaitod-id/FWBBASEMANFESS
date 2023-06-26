@@ -70,7 +70,7 @@ start_msg = os.environ.get("START_MSG", """"
 {fullname} 🌱\n\nIni adalah bot menfess, semua pesan yang kamu kirim akan masuk ke channel secara anonymous. ketik /help""")
 
 start_msg2 = os.environ.get("START_MSG2", """"
-{mention} Silahkan join ke @NekoMenfess dan klik /start""")
+{mention} Silahkan join ke @NekoMenfess dan coba lagi dengan mengetik atau klik /start""")
 
 gagalkirim_msg = os.environ.get("GAGAL_KIRIM", """
 {mention}, pesan mu gagal terkirim silahkan gunakan hastag:
